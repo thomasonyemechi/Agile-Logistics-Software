@@ -148,7 +148,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label class="form-label">Assign Role</label>
-                            <select name="role" class="selectpicker" data-width="100%" required>
+                            <select name="role_id" class="selectpicker" data-width="100%" required>
                                 <option selected value=0>... Select Role ..</option>
                                 <option value=1>Driver</option>
                                 <option value=3>Normal Staff</option>

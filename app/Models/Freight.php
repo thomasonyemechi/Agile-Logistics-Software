@@ -12,8 +12,10 @@ class Freight extends Model
     protected $table = 'freights';
 
     protected $fillable = [
-        'manifest_id', 'bill_number', 'consignee', 'consignee_email', 'consignee_phone', 'consignee_address', 'shipper', 'destination', 'pieces', 'weight', 'date', 'byd_split', 'protective_service', 'due_date', 'created_by', 'approved_by', 'assigned_to',
-        'status'
+        'manifest_id', 'bill_number', 'consignee', 'consignee_email', 'consignee_phone', 'consignee_address', 'shipper',
+        'destination', 'pieces', 'weight', 'date', 'byd_split', 'protective_service', 'due_date', 'created_by', 'approved_by',
+        'assigned_to',
+        'status', 'need_appointment', 'message'
     ];
 
 
@@ -30,5 +32,10 @@ class Freight extends Model
     function user()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    function driver()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }

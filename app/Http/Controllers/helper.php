@@ -74,23 +74,61 @@ function UserRole($role)
 }
 
 
+function appointment($apt)
+{
+    if($apt == 1){
+        $t = '<div class="badge bg-primary">Appoiment Is Required</div>';
+    }else {
+        $t = '<div class="badge bg-secondary">Appoiment Not Required</div>';
+
+    }
+    return $t;
+}
+
 
 
 function deliveryProStatus($status)
 {
     $color = '';
-    if($status == 0){
-       $color = 'primary'; $title = 'APT';
-    }elseif($status == 1){
+    if($status == 3){
+       $color = 'primary'; $title = 'OFD';
+    }else if($status == 4){
+        $color = 'secondary'; $title = 'OFD';
+     }elseif($status == 5){
         $color = 'success'; $title = 'DEL';
-    }elseif($status == 2){
-        $color = 'primary'; $title = 'RFS';
+    }elseif($status == 6){
+        $color = 'danger'; $title = 'RFS';
     }else{
-        $color = 'secondary'; $title = '...';
+        $color = 'warning'; $title = '...';
     }
     $string  = '<div class="badge bg-'.$color.'">'.$title.'</div>';
     return $string;
 }
+
+
+function deliveryStatus($status)
+{
+    $color = '';
+    if($status == 3){
+       $color = 'primary'; $title = 'Out For Delivery';
+    }else if($status == 4){
+        $color = 'secondary'; $title = 'Out For Delivery';
+     }else if($status == 2){
+        $color = 'secondary'; $title = 'Approved';
+     }else if($status == 1){
+        $color = 'secondary'; $title = 'Pending';
+     }elseif($status == 5){
+        $color = 'success'; $title = 'Delivered';
+    }elseif($status == 6){
+        $color = 'danger'; $title = 'Refused';
+    }else{
+        $color = 'warning'; $title = 'Pending';
+    }
+    // $string  = '<div class="badge bg-'.$color.'">'.$title.'</div>';
+    return $title;
+}
+
+
 
 
 
@@ -158,19 +196,19 @@ function freightBgPick($status, $title)
 
 
 
-function deliveryStatus($status)
-{
-    $title = '';  $color = '';
-    if($status == 0){
-        $title = 'Delivery Pending'; $color = 'secondary';
-    }elseif($status == 1){
-        $title = 'Delivered'; $color = 'success';
-    }elseif($status == 3){
-        $title = 'Not Delivered'; $color = 'danger';
-    }
-    $string  = '<div class="badge bg-'.$color.'">'.$title.'</div>';
-    return $string;
-}
+// function deliveryStatus($status)
+// {
+//     $title = '';  $color = '';
+//     if($status == 0){
+//         $title = 'Delivery Pending'; $color = 'secondary';
+//     }elseif($status == 1){
+//         $title = 'Delivered'; $color = 'success';
+//     }elseif($status == 3){
+//         $title = 'Not Delivered'; $color = 'danger';
+//     }
+//     $string  = '<div class="badge bg-'.$color.'">'.$title.'</div>';
+//     return $string;
+// }
 
 
 // function totalF

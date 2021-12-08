@@ -33,7 +33,7 @@
                     </div>
                     <div class="nav btn-group" role="tablist">
                         <button type="button" class="btn  btn-outline-white active" data-bs-toggle="modal"
-                            data-bs-target="#editOrganization">
+                            data-bs-target="#editManifest">
                             <span class="fe fe-edit"></span> Edit Manifest Info
                         </button>
                     </div>
@@ -170,20 +170,16 @@
                                     <tr>
                                         <td class="align-middle">
                                             <a href="/control/freight/approval/{{$fre->id}}" class="freightInfo align-middle" style="font-weight: bolder"
-                                                title="click for more">{!! freightBgPick($fre->status, $fre->bill_number) !!}</a>
+                                                title="click for more">{{$fre->bill_number }} {!! deliveryProStatus($fre->status) !!} </a>
                                         </td>
-                                        <td class="align-middle">{{ $fre->weight }} / {{ $fre->pieces }} {{ money($fre->byd_split) }} </td>
-                                        <td class="align-middle">{{ $fre->consignee }} {{ $fre->number }} </td>
-                                        <td> {{ \App\Models\FreightApproval::where('freight_id', $fre->id)->sum('pieces') }} </td>
+                                        <td class="align-middle"> @if ($fre->status > 2)
+                                            {{$fre->driver->name}} (Driver)<br>
+                                        @endif {{$fre->weight}} LBS | {{ money($fre->byd_split) }} </td>
+                                        <td class="align-middle">{{ $fre->consignee }} {!!appointment($fre->need_appointment)!!}  <br> {{ $fre->consignee_email }} | {{ $fre->consignee_phone }} </td>
+                                        <td  class="align-middle"> {{ \App\Models\FreightApproval::where('freight_id', $fre->id)->sum('pieces') }} </td>
                                         <td class="align-middle">{{ $fre->destination }} </td>
-                                        <td class="align-middle">
-                                            <a href="/control/freight/approval/{{ $fre->id }}" class="btn btn-primary btn-xs btn" >Approvals</a>
-                                            <a href="/control/freight/delivery/{{ $fre->id }}" class="btn btn-secondary btn-xs btn me-2">Deliveries</a>
-                                        </td>
                                     </tr>
                                 @endforeach
-
-
                             </tbody>
                         </table>
                     </div>
@@ -195,6 +191,74 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="modal fade" id="editManifest" tabindex="-1" role="dialog" aria-labelledby="editManifest" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Edit Manifest Info</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fe fe-x-circle"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('control.editManifest') }}" class="row">@csrf
+                        <x-jet-validation-errors />
+                        <div class="mb-2 col-md-6">
+                            <label class="form-label">Manifest Number</label>
+                            <input type="text" class="form-control" name="manifest_number" value="{{ $manifest->manifest_number }}"
+                                placeholder="Manifest Number" required>
+                                <input type="hidden" name="manifest_id" value="{{ $manifest->id }}">
+                        </div>
+
+                        <div class="mb-2 col-md-6">
+                            <label class="form-label">Tractor Number</label>
+                            <input type="text" class="form-control" name="tractor_no" value="{{ $manifest->tractor_no }}"
+                                placeholder="Tractor Number" required>
+                        </div>
+
+                        <div class="mb-2 col-md-6">
+                            <label class="form-label">Driver</label>
+                            <input type="text" class="form-control" name="driver" value="{{ $manifest->driver }}"
+                                placeholder="Driver" required>
+                        </div>
+
+
+                        <div class="mb-2 col-md-6">
+                            <label class="form-label">Owner</label>
+                            <input type="text" class="form-control" name="owner" value="{{ $manifest->owner }}"
+                                placeholder="Owner" required>
+                        </div>
+
+                        <div class="col-4">
+                            <label class="form-label">Trailer No</label>
+                            <input type="text" name="trailer_no" class="form-control" value="{{ $manifest->trailer_no }}"
+                                placeholder="Trailer No" required>
+                        </div>
+                        <div class="mb-2 col-4">
+                            <label class="form-label">Trailer Seal No</label>
+                            <input type="text" name="trailer_seal_no" class="form-control" value="{{ $manifest->trailer_seal_no }}"
+                                placeholder="Trailer Seal No" required>
+                        </div>
+                        <div class="mb-2 col-4">
+                            <label class="form-label">Placards</label>
+                            <input type="text" name="plac" class="form-control" value="{{ $manifest->plac }}"
+                                placeholder="Placards" required>
+                        </div>
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-outline-secondary me-2"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Manifest</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 
 
@@ -290,6 +354,16 @@
                             <input type="date" name="due_date" class="form-control" value="{{ old('due_date') }}"
                                 required>
                         </div>
+
+
+                        <div class="mb-1 d-flex justify-content-end col-12">
+                            <input type="checkbox" id="need_appointment" name="need_appointment" value="1" class="form-check" >
+
+                            <label for="need_appointment" class="form-label ms-2"> Check If Appointment is Needed</label>
+
+                        </div>
+
+
 
 
                         <div class="col-12 d-flex justify-content-end">

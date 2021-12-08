@@ -19,7 +19,7 @@ class Active
         if(auth()->user()->status == 1){
             return $next($request);
         }else {
-            return redirect('/login')->with('error', 'Your account has been deavtivated, Contact an Admin');
+            return redirect('/signin')->with('error', 'Your account has been deavtivated, Contact an Admin');
         }
     }
 }

@@ -28,9 +28,7 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="d-flex">
-                        <a href="#" class="btn btn-primary">View Freights Approvals</a>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -50,12 +48,10 @@
                                 <tr>
                                     <th scope="col" class="border-0">Company</th>
                                     <th scope="col" class="border-0">Bill Number</th>
-                                    <th scope="col" class="border-0">PIECES / LBS </th>
+                                    <th scope="col" class="border-0">status</th>
+                                    <th scope="col" class="border-0">Others </th>
                                     <th scope="col" class="border-0">CONSIGNEE</th>
                                     <th scope="col" class="border-0">DESTINATION</th>
-                                    <th scope="col" class="border-0">added by</th>
-                                    <th scope="col" class="border-0">Due date</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,17 +61,14 @@
 
                                         <td class="align-middle">
                                             <a href="/control/freight/approval/{{$fre->id}}" class="freightInfo align-middle" style="font-weight: bolder"
-                                                title="click for more">{!! freightBgPick($fre->status, $fre->bill_number) !!}</a>
+                                                title="click for more">{{$fre->bill_number }} {!! deliveryProStatus($fre->status) !!} </a>
                                         </td>
-                                        <td class="align-middle">{{ $fre->weight }} / {{ $fre->pieces }} {{ money($fre->byd_split) }} </td>
-                                        <td class="align-middle">{{ $fre->consignee }} <br> {{ $fre->consignee_email }} {{ $fre->consignee_phone }} </td>
+                                        <td class="align-middle"> {!! deliveryStatus($fre->status) !!} </td>
+                                        <td class="align-middle"> @if ($fre->status > 2)
+                                            {{$fre->driver->name}} (Driver)<br>
+                                        @endif {{$fre->weight}} LBS | {{ money($fre->byd_split) }} </td>
+                                        <td class="align-middle">{{ $fre->consignee }} {!!appointment($fre->need_appointment)!!}  <br> {{ $fre->consignee_email }} | {{ $fre->consignee_phone }} </td>
                                         <td class="align-middle">{{ $fre->destination }} </td>
-                                        <td class="align-middle"> {{ ucwords($fre->user->name) }} </td>
-                                        <td class="align-middle"> {{ $fre->due_date }} </td>
-                                        <td class="align-middle">
-                                            <a href="/control/freight/approval/{{ $fre->id }}" class="btn btn-primary btn-xs btn" >Approvals</a>
-                                            <a href="/control/freight/delivery/{{ $fre->id }}" class="btn btn-secondary btn-xs btn me-2">Deliveries</a>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

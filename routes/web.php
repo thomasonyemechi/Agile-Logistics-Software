@@ -4,6 +4,7 @@ use App\Models\User;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,40 +23,38 @@ Route::get('/', function () {
 
 
 
-Route::get('/signin', function () {
-    return view('signin')->with('error', 'Wassup bro');
-});
-
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
 
 
 Route::get('/logout', function () {
-    session()->flush();
-    return redirect('/signin')->with('success', 'You are logged out');
+    Auth::logout();
+    return redirect()->route('login')->with('success', 'You are logged out');
 });
 
-
-
-
 Route::get('/createPermission', [\App\Http\Controllers\StaffController::class, 'createPermission']);
-Route::post('/loginUser', [\App\Http\Controllers\AuthController::class, 'login'])->name('loginUser');
+
+Route::post('/login_user', [\App\Http\Controllers\InController::class, 'weblogin'])->name('weblogin.user');
 
 
 
-Route::group(['prefix'=>'driver', 'as'=>'driver.', 'middleware' => ['auth', 'active', 'driver' ] ], function (){
+Route::group(['prefix'=>'driver', 'as'=>'driver.', 'middleware' => ['auth', 'driver', 'active'] ], function (){
     Route::get('/', function () { return redirect('/driver/new/delivery'); });
-    Route::get('/new/delivery', function () { return view('driver.newdelivery'); });
+    Route::get('/new/delivery', function () { return view('driver.newdelivery'); })->name('driverDashboard');
     Route::get('/refused/delivery', function () { return view('driver.refuseddelivery'); });
     Route::get('/sucessfull/delivery', function () { return view('driver.sucessfulldelivery'); });
     Route::get('/history/delivery', function () { return view('driver.history'); });
+
     Route::post('/driverFreightMessage', [\App\Http\Controllers\DeliveryController::class, 'driverFreightMessage'])->name('driverFreightMessage');
 });
 
 
-Route::group(['prefix'=>'control', 'as'=>'control.', 'middleware' => ['auth', 'active', 'admin' ] ], function (){
+Route::group(['prefix'=>'control', 'as'=>'control.', 'middleware' => ['auth', 'active', 'admin'] ], function (){
 
     Route::get('/', function () {
         return view('control.index');
-    });
+    })->name('dashboard');
     Route::get('/addnewstaff', function () {
         return view('control.addstaff');
     });
@@ -90,6 +89,7 @@ Route::group(['prefix'=>'control', 'as'=>'control.', 'middleware' => ['auth', 'a
 
     // Freight management
     Route::post('/createMainfest', [\App\Http\Controllers\FreightController::class, 'createMainfest'])->name('createMainfest');
+    Route::post('/editManifest', [\App\Http\Controllers\FreightController::class, 'editManifest'])->name('editManifest');
     Route::get('/manifest/{id}', function ($id) {
         $manifest = \App\Models\Manifest::find($id);
         return view('control.manifest', compact('manifest'));
@@ -98,14 +98,15 @@ Route::group(['prefix'=>'control', 'as'=>'control.', 'middleware' => ['auth', 'a
     Route::get('/all/manifest', function () { return view('control.viewallmanifest'); });
     Route::get('/all/freight', function () { return view('control.viewallfreight'); });
 
+    Route::post('/eidtFreight', [\App\Http\Controllers\FreightController::class, 'eidtFreight'])->name('eidtFreight');
     Route::post('/createFreight', [\App\Http\Controllers\FreightController::class, 'createFreight'])->name('createFreight');
     Route::post('/approveFreight', [\App\Http\Controllers\FreightController::class, 'approveFreight'])->name('approveFreight');
     Route::get('/freightsummary/{freight_id}', [\App\Http\Controllers\FreightController::class, 'freightSummary']);
 
-    Route::get('/freight/delivery/{id}', function ($id) {
-        $freight = \App\Models\Freight::find($id);
-        return view('control.freightdelivery', compact('freight'));
-    });
+    // Route::get('/freight/delivery/{id}', function ($id) {
+    //     $freight = \App\Models\Freight::find($id);
+    //     return view('control.freightdelivery', compact('freight'));
+    // });
 
     Route::get('/freight/approval/{id}', function ($id) {
         $freight = \App\Models\Freight::find($id);
@@ -118,7 +119,7 @@ Route::group(['prefix'=>'control', 'as'=>'control.', 'middleware' => ['auth', 'a
 
 
     /////delivery
-    Route::post('/assignFreightToDriver', [\App\Http\Controllers\Controller::class, 'assignFreightToDriver'])->name('assignFreightToDriver');
+    Route::post('/assignFreightToDriver', [\App\Http\Controllers\DeliveryController::class, 'assignFreightToDriver'])->name('assignFreightToDriver');
     Route::get('/history/delivery', function () {
         return view('control.deliveryhistory');
     });

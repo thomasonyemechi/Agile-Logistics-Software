@@ -9,14 +9,14 @@
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{ route('driver.driverFreightMessage') }}"  class="row">@csrf
-                    <input type="hidden" name="delivery_id">
+                    <input type="hidden" name="freight_id">
                     <div class="col-12">
                         <label>Action</label>
                         <select name="action" class="form-control" >
                             <option>...Select Action...</option>
-                            <option value="1">Package Delivered</option>
-                            <option value="2">Package Refused</option>
-                            <option value="0">Others</option>
+                            <option value="4">Out For Delivery (OFD)</option>
+                            <option value="5">Delivered (DEL)</option>
+                            <option value="6">Refused (RFS)</option>
                         </select>
                     </div>
 

@@ -63,13 +63,14 @@ class StaffController extends Controller
             'name' => 'string|required',
             'email' => 'email|required|unique:users,email',
             'phone' => 'required',
-            'role' => 'required',
+            'role_id' => 'required|integer',
         ])->validate();
+
         $staff = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'role' => $request->role,
+            'role' => $request->role_id,
             'password' => Hash::make($request->phone),
         ]);
 

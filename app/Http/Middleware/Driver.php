@@ -19,7 +19,7 @@ class Driver
         if(auth()->user()->role == 1){
             return $next($request);
         }else{
-            return redirect('/login')->with('error', 'You are not a driver');
+            return redirect('/signin')->with('error', 'You are not a driver');
         }
     }
 }

@@ -82,10 +82,6 @@
                             <li class="nav-item">
                                 <a class="nav-link " href="/control/all/freight">View All Freights</a>
                             </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link " href="/control/history/delivery">Delivery History</a>
-                            </li>
                         </ul>
                     </div>
                 </li>

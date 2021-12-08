@@ -7,8 +7,8 @@ $(function() {
         $('#manageDeliveryModal').modal('show');
         modal = document.querySelector('#manageDeliveryModal');
 
-        modal.querySelector('input[name="delivery_id"]').value = data.id;
-        $('#titleModal').html(`Manage Delivery (${data.freight.bill_number})`)
+        modal.querySelector('input[name="freight_id"]').value = data.id;
+        $('#titleModal').html(`Manage Delivery (${data.bill_number})`)
         action = modal.querySelector('select[name="action"]');
         msg = modal.querySelector('textarea[name="message"]');
 

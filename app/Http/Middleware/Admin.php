@@ -16,13 +16,13 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->permission->admin == 1){
+        if(auth()->user()->role > 1){
             return $next($request);
         }else {
             if(auth()->user()->role == 1){
-                return redirect('/driver')->with('error', 'Unauthorized Page');
+                return redirect('/driver/new/delivery')->with('error', 'Unauthorized Page');
             }
-            return redirect('/login')->with('error', 'Unauthorized Page : you need admin permission to access page');
+            return redirect('/signin')->with('error', 'Unauthorized Page : you need admin permission to access page');
         }
     }
 }

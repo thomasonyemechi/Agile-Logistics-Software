@@ -104,11 +104,11 @@ class FreightController extends Controller
         ])->validate();
         $freight = Freight::find($request->freight_id);
 
-        if($freight->status == 3){
-            return back()->with('error', 'Freight assigned to a driver cannot be edited');
-        }
+        // if($freight->status == 3){
+        //     return back()->with('error', 'Freight assigned to a driver cannot be edited');
+        // }
 
-        Freight::where('freight_id', $request->freight_id)->update([
+        Freight::where('id', $request->freight_id)->update([
             'bill_number' => $request->bill_number,
             'consignee' => $request->consignee,
             'consignee_email' => $request->consignee_email,
@@ -120,6 +120,7 @@ class FreightController extends Controller
             'weight' => $request->weight,
             'byd_split' => $request->byd_split,
             'protective_service' => $request->protective_service,
+            'need_appointment' =>  $request->need_appointment ?? 0,
             'date' => $request->date,
             'due_date' => $request->due_date,
         ]);
@@ -160,6 +161,7 @@ class FreightController extends Controller
             'protective_service' => $request->protective_service,
             'date' => $request->date,
             'due_date' => $request->due_date,
+            'need_appointment' =>  $request->need_appointment ?? 0,
             'created_by' => auth()->user()->id,
         ]);
         return back()->with('success', 'Freight added successfully');
@@ -168,10 +170,7 @@ class FreightController extends Controller
 
     function editManifest(Request $request)
     {
-        $val = Validator::make($request->all(), [
-            'manifest_number' => 'required',
-        ])->validate();
-        Manifest::where('id', $request->manifest_id)->create([
+        Manifest::where('id', $request->manifest_id)->update([
             'manifest_number' => $request->manifest_number,
             'driver' => $request->driver,
             'owner' => $request->owner,

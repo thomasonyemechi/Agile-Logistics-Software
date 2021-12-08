@@ -22,7 +22,7 @@ class DeliveryController extends Controller
             'time' => time(),
         ];
 
-        $delivery = Delivery::find($request->delivery_id);
+        $delivery = Freight::find($request->freight_id);
         if($delivery->message == ''){
             $all_new[] = $msg;
         }else {
@@ -31,16 +31,10 @@ class DeliveryController extends Controller
             $all_new = $former_message;
         }
 
-        Delivery::where('id', $request->delivery_id)->update([
+        Freight::where('id', $request->freight_id)->update([
             'message' => json_encode($all_new),
+            'status' => $request->action,
         ]);
-
-        if($request->action > 0) {
-            Delivery::where('id', $request->delivery_id)->update([
-                'status' => $request->action,
-                'date_del' => time(),
-            ]);
-        }
 
         return back()->with('success', 'Freight updated <br> Message submitted sucessfuly');
     }
@@ -52,27 +46,15 @@ class DeliveryController extends Controller
     }
 
 
-    function assignFreight(Request $request)
+    function assignFreightToDriver(Request $request)
     {
         Validator::make($request->all(), [
             'pieces' => 'required',
             'driver_id' => 'required',
         ])->validate();
 
-        $freight = Freight::find($request->freight_id);
-        $pieces_assigned = Delivery::where('freight_id', $request->freight_id)->sum('pieces');
-        $all = $pieces_assigned + $request->pieces;
-        if($all > $freight->pieces){
-            return back()->with('error', 'Value specifed is more than value in stock');
-        }
-        Delivery::create([
-            'freight_id' => $request->freight_id,
-            'driver_id' => $request->driver_id,
-            'pieces' => $request->pieces,
-            'staus' => 1,
-            'created_by' => auth()->user()->id,
-        ]);
         Freight::where('id', $request->freight_id)->update([
+            'assigned_to' => $request->driver_id,
             'status' => 3
         ]);
         return back()->with('success', 'Freight sucessfully assigned to driver');

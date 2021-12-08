@@ -19,7 +19,7 @@ class Auth
         if(auth()->user()){
             return $next($request);
         }else{
-            return redirect('signin')->with('error', 'You are not logged in');
+            return redirect('/login')->with('error', 'You are not logged in');
         }
     }
 }

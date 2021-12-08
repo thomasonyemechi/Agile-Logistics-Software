@@ -33,11 +33,8 @@
         </div>
 
         @php
-            $orders = \App\Models\Delivery::where(['driver_id' => auth()->user()->id, 'status' => 0 ])->orderBy('id', 'desc')->paginate(100);
+            $freights = \App\Models\Freight::where(['assigned_to' => auth()->user()->id, 'status' => 3 ])->orderBy('id', 'desc')->paginate(100);
         @endphp
-
-
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -45,26 +42,35 @@
                         <table id="dataTableBasic2" class="table table-sm mb-0 text-nowrap">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" class="border-0">Pieces</th>
+                                    <th scope="col" class="border-0">Bill Number</th>
+                                    <th scope="col" class="border-0">Others </th>
                                     <th scope="col" class="border-0">CONSIGNEE</th>
+                                    <th scope="col" class="border-0">Reveiced</th>
                                     <th scope="col" class="border-0">DESTINATION</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($orders as $ord)
+                                @foreach ($freights as $fre)
                                     <tr>
-                                        <td class="align-middle"> {{ $ord->freight->bill_number }} ({{ $ord->pieces }})  {!! deliveryProStatus($ord->status) !!}  </td>
-                                        <td class="align-middle">{{ $ord->freight->consignee }} <br> {{ $ord->freight->consignee_phone }} {{ $ord->freight->consignee_email }}  </td>
-                                        <td class="align-middle">{{ $ord->freight->destination }} ({{ $ord->freight->due_date }}) </td>
-                                        <td class="align-middle"><button class="btn btn-primary btn-xs manageOrder " data-data='{{ json_encode($ord) }}'  >Manage</button></td>
+                                        <td class="align-middle">
+                                            <a href="javascript::" class="manageOrder align-middle" data-data='{{ json_encode($fre) }}'  style="font-weight: bolder"
+                                                title="click for more">{{$fre->bill_number }} {!! deliveryProStatus($fre->status) !!} </a>
+                                        </td>
+                                        <td class="align-middle"> @if ($fre->status > 2)
+                                            {{$fre->driver->name}} (Driver)<br>
+                                        @endif {{$fre->weight}} LBS | {{ money($fre->byd_split) }} </td>
+                                        <td class="align-middle">{{ $fre->consignee }} {!!appointment($fre->need_appointment)!!}
+                                            <br> {{ $fre->consignee_email }} | {{ $fre->consignee_phone }} </td>
+                                        <td>  {{ \App\Models\FreightApproval::where('freight_id', $fre->id)->sum('pieces') }}</td>
+                                        <td class="align-middle">{{ $fre->destination }} </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="d-flex mt-3 justify-content-center">
-                        {{ $orders->links('pagination::bootstrap-4') }}
+                        {{ $freights->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
             </div>

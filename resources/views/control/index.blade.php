@@ -206,7 +206,7 @@
                                         <tr>
                                             <td><a href="/control/organization/{{$man->org->slug}}"> {{$man->org->name}} </a> </td>
                                             <td><a href="/control/manifest/{{ $man->id }}">{{$man->manifest_number}} </a> </td>
-                                            <td> {{$man->plac}} </td>
+                                            <td> {{$man->freights->sum('pieces')}} </td>
                                             <td> {{$man->driver}} </td>
                                             <td> {{$man->trailer_no}} </td>
                                             <td>{{ date('j, D M y H:i a',strtotime($man->created_at)) }}</td>
@@ -240,24 +240,21 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" class="border-0">Bill Number</th>
-                                        <th scope="col" class="border-0">PIECES / LBS </th>
+                                        <th scope="col" class="border-0">Others </th>
                                         <th scope="col" class="border-0">DESTINATION</th>
-                                        <th scope="col" class="border-0">Due date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($freights as $fre)
-                                        <tr>
-                                            <td>
-                                                <a href="/control/freight/approval/{{$fre->id}}" class="freightInfo align-middle" style="font-weight: bolder"
-                                                    title="click for more">{!! freightBgPick($fre->status, $fre->bill_number) !!}</a>
-                                            </td>
-                                            <td>{{ $fre->weight }} / {{ $fre->pieces }} </td>
-                                            <td>{{ $fre->destination }} </td>
-                                            <td>{{ $fre->due_date }} </td>
-
-                                        </tr>
-                                    @endforeach
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a href="/control/freight/approval/{{$fre->id}}" class="freightInfo align-middle" style="font-weight: bolder"
+                                                title="click for more">{{$fre->bill_number }} {!! deliveryProStatus($fre->status) !!} </a>
+                                        </td>
+                                        <td class="align-middle"> {{$fre->weight}} LBS | {{ money($fre->byd_split) }}</td>
+                                        <td class="align-middle">{{ $fre->destination }} </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

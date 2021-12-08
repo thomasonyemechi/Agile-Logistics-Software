@@ -149,9 +149,9 @@
                                 @foreach ($deliveries as $del)
 
                                     <tr>
-                                        <td>{{ $del->pieces }}</td>
+                                        <td>{{ $del->pieces }}  </td>
                                         <td>{{ ucwords($del->driver->name) }}</td>
-                                        <td> {!! deliveryStatus($del->status) !!} </td>
+                                        <td>{!! deliveryProStatus($del->status) !!}</td>
                                         <td> <button class="btn btn-xs btn-info">View Message</button> </td>
                                     </tr>
                                 @endforeach
